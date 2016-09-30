@@ -1,31 +1,32 @@
 function PlayerController() {
-    var playerService = new PlayerService();
+    var playerService = new PlayerService(); 
 
     $('.new-player-form').on('submit', function addPlayer(event) {
+        // debugger;
         event.preventDefault();
         var form = event.target;
         playerService.addPlayer(form.playerName.value, form.playerPosition.value, form.playerJersey.value);
-        updateRoster(playerService._players);
+        updateRoster(playerService.getPlayers());
     });
 
-    function removePlayer(id) {
-
-    }
+    $('.player-roster').on('click', 'button.remove-player', function removePlayer() {
+        playerService.removePlayer(this.id);
+        updateRoster(playerService.getPlayers());
+    });
 
     function updateRoster(playerList) {
         var roster = $('.player-roster');
         var template = '';
-        for (var i = 0; i < array.length; i++) {
-            var player = array[i];
-            var playerId = player.name.split(' ').join('-');
+        for (var i = 0; i < playerList.length; i++) {
+            var player = playerList[i];
             template += `
-                <div class="player-card" id="${playerId}">
-                    <button type="button" class="btn btn-default" onclick="removePlayer(${playerId})">Remove Player</button>
+                <div class="player-card">
+                    <button type="button" class="btn btn-default remove-player" id="${player.id}">Remove Player</button>
                     <br/>
                     <img src="http://s.nflcdn.com/static/content/public/image/fantasy/transparent/200x200/">
-                    <h3>${form.playerName.value}</h3>
-                    <h4>${form.playerPosition.value}</h4>
-                    <h1>${form.playerJersey.value}</h1>
+                    <h3>${player.name}</h3>
+                    <h4>${player.position}</h4>
+                    <h1>${player.jersey}</h1>
                 </div>
             `
         }
@@ -34,3 +35,4 @@ function PlayerController() {
     }
 
 }
+PlayerController();

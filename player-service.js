@@ -25,7 +25,7 @@ function PlayerService() {
     this.removePlayer = function(id) {
         for (var i = 0; i < _players.length; i++) {
             if (_players[i].id = id) {
-                _players.split(i, 1);
+                _players.splice(i, 1);
             };
         };
     };
