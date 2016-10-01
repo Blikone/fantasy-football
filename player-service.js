@@ -24,6 +24,18 @@ function PlayerService() {
         });
     };
 
+    function filterPlayers(unfilteredList) {
+        var filteredList = unfilteredList.filter(function(player) {
+            if (player.fullname == player.lastname) {
+                return true;
+            };
+            if (player.jersey) {
+                return true;
+            };
+        });
+        return filteredList;
+    }
+
     this.getNFL = function loadPlayerData(callback) {
         var apiUrl = "http://api.cbssports.com/fantasy/players/list?version=3.0&SPORT=football&response_format=json";
         //Lets check the localstorage for the data before making the call.
@@ -32,9 +44,10 @@ function PlayerService() {
 
         var localData = localStorage.getItem('playerData');
         if (localData) {
-            playerData = JSON.parse(localData);
-            console.log(playerData[0]);
-            console.log(playerData[4]);
+            var rawPlayerData = JSON.parse(localData);
+            playerData = filterPlayers(rawPlayerData);
+            // console.log(playerData[0]);
+            // console.log(playerData[4]);
             return callback(playerData);
             //return will short-circuit the loadPlayerData function
             //this will prevent the code below from ever executing
@@ -43,7 +56,8 @@ function PlayerService() {
         var url = "http://bcw-getter.herokuapp.com/?url=";
         var endPointUrl = url + encodeURIComponent(apiUrl);
         $.getJSON(endPointUrl, function (data) {
-            playerData = data.body.players;
+            var rawPlayerData = data.body.players;
+            playerData = filterPlayers(rawPlayerData);
             console.log('Player Data Ready')
             console.log('Writing Player Data to localStorage')
             localStorage.setItem('playerData', JSON.stringify(playerData))
