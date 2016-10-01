@@ -23,8 +23,8 @@ function PlayerController() {
                 <div class="player-card">
                     <button type="button" class="btn btn-default remove-player" id="${player.id}">Remove Player</button>
                     <br/>
-                    <img src="http://s.nflcdn.com/static/content/public/image/fantasy/transparent/200x200/">
-                    <h3>${player.name}</h3>
+                    <img src="${player.photo}">
+                    <h3>${player.fullname}</h3>
                     <h4>${player.position}</h4>
                     <h1>${player.jersey}</h1>
                 </div>
@@ -33,6 +33,7 @@ function PlayerController() {
         roster.empty();
         roster.append(template);
     }
+    playerService.getNFL(updateRoster)
 
 }
 PlayerController();
