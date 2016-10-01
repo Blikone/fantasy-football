@@ -2,6 +2,10 @@
     display: inline-block;
     border: 1px solid black;
     text-align: center;
+    width: 200px;
+}
+.player-photo{
+    width: 170px;
 }
 .form-control{
     width: 40%;

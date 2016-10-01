@@ -23,7 +23,7 @@ function PlayerController() {
                 <div class="player-card">
                     <button type="button" class="btn btn-default remove-player" id="${player.id}">Remove Player</button>
                     <br/>
-                    <img src="${player.photo}">
+                    <img src="${player.photo}" class="player-photo">
                     <h3>${player.fullname}</h3>
                     <h4>${player.position}</h4>
                     <h1>${player.jersey}</h1>

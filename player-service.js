@@ -46,8 +46,8 @@ function PlayerService() {
         if (localData) {
             var rawPlayerData = JSON.parse(localData);
             playerData = filterPlayers(rawPlayerData);
-            // console.log(playerData[0]);
-            // console.log(playerData[4]);
+            console.log(playerData[0]);
+            console.log(playerData[6]);
             return callback(playerData);
             //return will short-circuit the loadPlayerData function
             //this will prevent the code below from ever executing
