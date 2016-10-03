@@ -1,5 +1,107 @@
 function PlayerService() {
-    var playerData = [];
+
+    //////////////////////////////////
+    ///////Get players from API///////
+    //////////////////////////////////
+    this.loadNFL = function loadNFL(callback) {
+        var apiUrl = "https://api.cbssports.com/fantasy/players/list?version=3.0&SPORT=football&response_format=json";
+        
+        var localData = localStorage.getItem('playerData');
+        if (localData) {
+            var rawData = JSON.parse(localData);
+            console.log(playerData[Math.ceil(Math.random()*100)]);
+            return callback(playerData);
+        }
+        var url = "https://bcw-getter.herokuapp.com/?url=";
+        var endPointUrl = url + encodeURIComponent(apiUrl);
+        $.getJSON(endPointUrl, function (data) {
+            var rawData = data.body.players;
+            console.log('Player Data Ready')
+            console.log('Writing Player Data to localStorage')
+            localStorage.setItem('playerData', JSON.stringify(playerData))
+            console.log('Finished Writing Player Data to localStorage')
+            callback(playerData)
+        });
+    }
+    /////////////////////////////////////////////////////////////
+    ///////Alter to remove free agents: Create master list///////
+    /////////////////////////////////////////////////////////////
+    function vetPlayers(rawList) {
+        var vettedList =(rawList.filter(function(player) {
+            if (player.fullname == player.lastname) {
+                return true;
+            };
+            if (player.jersey) {
+                return true;
+            };
+        });
+        return vettedList;
+    }
+    var _NFLData = this.loadNFL(vetPlayers)
+    
+    //////////////////////////////////////////
+    ///////Hold and filter picking pool///////
+    //////////////////////////////////////////
+    this.filterNFL = function (team, position, squad) {
+        var filteredPlayers = _NFLData.filter(function(player) {
+            if (team == "*" && position == "*") {
+                return true;
+            }
+            if (team == "*" && player.position == position) {
+                return true;
+            }
+            if (player['pro_team'] == team && position == "*") {
+                return true;
+            }
+            if (player['pro_team'] == team && player.position == position){
+                return true;
+            };
+        });
+        var filterBySquad = filteredPlayers.filter(function(player) {
+            switch (squad) {
+                case offense:
+                    if (player.fullname !== player.lastname) {
+                        return true;
+                    };
+                    break;
+                case defense:
+                    if (player.fullname !== player.lastname) {
+                        return true;
+                    };
+                    break;
+            }
+        });
+    };
+
+    //////////////////////////
+    ///////Hold my team///////
+    //////////////////////////
+
+    /////////////////////////////////////
+    ///////Tap players for my team///////
+    /////////////////////////////////////
+
+    ////////////////////////////////////////////////
+    ///////Send unwanted players back to pool///////
+    ////////////////////////////////////////////////
+
+    ///////////////////////////////
+    ///////Create new player///////
+    ///////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**     TO DO LIST
      * Be able to filter player bank by position or by team via dropdown menu
@@ -8,23 +110,23 @@ function PlayerService() {
      * Special case for choosing whole defensive line of a team (we only select the offensive line individually)
      */
 
-    this.getPlayersByTeam = function (teamName) {
-        playerData.filter(function (player) {
-            if (player.team == teamName) {
-                return true;
-            };
-        });
-    };
+    // this.getPlayersByTeam = function (teamName) {
+    //     playerData.filter(function (player) {
+    //         if (player.team == teamName) {
+    //             return true;
+    //         };
+    //     });
+    // };
 
-    this.getPlayersByPosition = function (position) {
-        playerData.filter(function (player) {
-            if (player.position == position) {
-                return true;
-            };
-        });
-    };
+    // this.getPlayersByPosition = function (position) {
+    //     playerData.filter(function (player) {
+    //         if (player.position == position) {
+    //             return true;
+    //         };
+    //     });
+    // };
 
-    function filterPlayers(unfilteredList) {
+    function vetPlayers(unfilteredList) {
         var filteredList = unfilteredList.filter(function(player) {
             if (player.fullname == player.lastname) {
                 return true;
@@ -36,27 +138,25 @@ function PlayerService() {
         return filteredList;
     }
 
-    this.getNFL = function loadPlayerData(callback) {
+    this.loadNFL = function loadPlayerData(callback) {
         var apiUrl = "https://api.cbssports.com/fantasy/players/list?version=3.0&SPORT=football&response_format=json";
         //Lets check the localstorage for the data before making the call.
         //Ideally if a user has already used your site 
         //we can cut down on the load time by saving and pulling from localstorage 
-
         var localData = localStorage.getItem('playerData');
         if (localData) {
             var rawPlayerData = JSON.parse(localData);
-            playerData = filterPlayers(rawPlayerData);
+            var playerData = vetPlayers(rawPlayerData);
             console.log(playerData[Math.ceil(Math.random()*100)]);
             return callback(playerData);
             //return will short-circuit the loadPlayerData function
             //this will prevent the code below from ever executing
         }
-
         var url = "https://bcw-getter.herokuapp.com/?url=";
         var endPointUrl = url + encodeURIComponent(apiUrl);
         $.getJSON(endPointUrl, function (data) {
             var rawPlayerData = data.body.players;
-            playerData = filterPlayers(rawPlayerData);
+            var playerData = vetPlayers(rawPlayerData);
             console.log('Player Data Ready')
             console.log('Writing Player Data to localStorage')
             localStorage.setItem('playerData', JSON.stringify(playerData))
@@ -67,9 +167,6 @@ function PlayerService() {
     }
 
 
-
-    var _myPlayers = [];
-
     function Player(playerName, playerPosition, playerJersey) {
         this.fullname = playerName;
         this.position = playerPosition;
@@ -79,9 +176,18 @@ function PlayerService() {
         this.photo = "http://s.nflcdn.com/static/content/public/image/fantasy/transparent/200x200/"
     }
 
+    var _NFLPlayers = [];
+    var _myPlayers = [];
+
     this.getPlayers = function () {
         return _myPlayers;
     };
+
+    this.getNFL = function () {
+        return PlayerService.loadNFL(function(nfl) {
+            return nfl;
+        })
+    }
 
     this.addPlayer = function (playerName, playerPosition, playerJersey) {
         if (!playerName || !playerPosition || !playerJersey) {
@@ -90,6 +196,10 @@ function PlayerService() {
         var player = new Player(playerName, playerPosition, playerJersey);
         _myPlayers.push(player);
     };
+
+    this.selectPlayer = function(player) {
+
+    }    
 
     this.removePlayer = function (id) {
         for (var i = 0; i < _players.length; i++) {

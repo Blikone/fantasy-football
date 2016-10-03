@@ -1,6 +1,7 @@
 function PlayerController() {
     var playerService = new PlayerService(); 
 
+    //////FILTERS TO DISPLAYED PLAYERS//////
     $('.filter-bar').on('submit', function filterPlayers(team, position) {
         // debugger;
         event.preventDefault();
@@ -23,20 +24,6 @@ function PlayerController() {
         });
         updateRoster(filteredPlayers);
     });
-
-    $('.new-player-form').on('submit', function addPlayer(event) {
-        // debugger;
-        event.preventDefault();
-        var form = event.target;
-        playerService.addPlayer(form.playerName.value, form.playerPosition.value, form.playerJersey.value);
-        updateRoster(playerService.getPlayers());
-    });
-
-    $('.player-roster').on('click', 'button.remove-player', function removePlayer() {
-        playerService.removePlayer(this.id);
-        updateRoster(playerService.getPlayers());
-    });
-
     $('.showOffense').on('click', function showOffense() {
         var filteredPlayers = JSON.parse(localStorage.getItem('playerData')).filter(function(player) {
             if (player.fullname !== player.lastname) {
@@ -57,6 +44,21 @@ function PlayerController() {
         $('.showDefense').removeClass('btn-default').addClass('active btn-success');
         $('.showOffense').removeClass('active btn-success').addClass('btn-default');
     })
+    
+
+    $('.new-player-form').on('submit', function addPlayer(event) {
+        // debugger;
+        event.preventDefault();
+        var form = event.target;
+        playerService.addPlayer(form.playerName.value, form.playerPosition.value, form.playerJersey.value);
+        updateRoster(playerService.getPlayers());
+    });
+
+    $('.player-roster').on('click', 'button.remove-player', function removePlayer() {
+        playerService.removePlayer(this.id);
+        updateRoster(playerService.getPlayers());
+    });
+
 
     function updateRoster(playerList) {
         var roster = $('.player-roster');
@@ -70,14 +72,14 @@ function PlayerController() {
                     <img src="${player.photo.replace('http','https')}" class="player-photo">
                     <h3>${player.fullname}</h3>
                     <h4>${player.position}</h4>
-                    <h1>${player.jersey}</h1>
+                    <h1>${player.jersey ? player.jersey : ''}</h1>
                 </div>
             `
         }
         roster.empty();
         roster.append(template);
     }
-    playerService.getNFL(updateRoster)
+    playerService.loadNFL(updateRoster)
 
 }
 PlayerController();
