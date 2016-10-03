@@ -8,6 +8,15 @@ function PlayerController() {
         var team = form.pickTeam.value;
         var position = form.pickPosition.value;
         var filteredPlayers = JSON.parse(localStorage.getItem('playerData')).filter(function(player) {
+            if (team == "*" && position == "*") {
+                return true;
+            }
+            if (team == "*" && player.position == position) {
+                return true;
+            }
+            if (player['pro_team'] == team && position == "*") {
+                return true;
+            }
             if (player['pro_team'] == team && player.position == position){
                 return true;
             };
@@ -35,7 +44,7 @@ function PlayerController() {
             var player = playerList[i];
             template += `
                 <div class="player-card">
-                    <button type="button" class="btn btn-default remove-player" id="${player.id}">Remove Player</button>
+                    <button type="button" class="btn btn-default add-to-team" id="${player.id}">Add to Team</button>
                     <br/>
                     <img src="${player.photo.replace('http','https')}" class="player-photo">
                     <h3>${player.fullname}</h3>
