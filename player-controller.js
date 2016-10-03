@@ -1,16 +1,18 @@
 function PlayerController() {
     var playerService = new PlayerService(); 
 
-    $('button.filter-players').on('submit', function filterPlayers(team, position) {
+    $('.filter-bar').on('submit', function filterPlayers(team, position) {
+        debugger;
         event.preventDefault();
         var form = event.target;
         var team = form.pickTeam.value;
         var position = form.pickPosition.value;
-        var filteredPlayers = playerService.getPlayers().filter(function(player) {
+        var filteredPlayers = JSON.parse(localStorage.getItem('playerData')).filter(function(player) {
             if (player['pro_team'] == team && player.position == position){
                 return true;
             };
         });
+        updateRoster(filteredPlayers);
     });
 
     $('.new-player-form').on('submit', function addPlayer(event) {
