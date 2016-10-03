@@ -2,10 +2,10 @@
     display: inline-block;
     border: 1px solid black;
     text-align: center;
-    width: 200px;
+    width: 115px;
 }
 .player-photo{
-    width: 170px;
+    width: 100px;
 }
 .form-control{
     width: 40%;
@@ -14,4 +14,14 @@
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+    float: left;
+    width: 49%;
+    height: 80%;
+    overflow-y: scroll;
+}
+.my-player-roster{
+    float: right;
+    width: 49%;
+    height: 80%;
+    overflow-y: scroll;
 }

@@ -2,7 +2,7 @@ function PlayerController() {
     var playerService = new PlayerService(); 
 
     $('.filter-bar').on('submit', function filterPlayers(team, position) {
-        debugger;
+        // debugger;
         event.preventDefault();
         var form = event.target;
         var team = form.pickTeam.value;
@@ -36,6 +36,27 @@ function PlayerController() {
         playerService.removePlayer(this.id);
         updateRoster(playerService.getPlayers());
     });
+
+    $('.showOffense').on('click', function showOffense() {
+        var filteredPlayers = JSON.parse(localStorage.getItem('playerData')).filter(function(player) {
+            if (player.fullname !== player.lastname) {
+                return true;
+            }
+        });
+        updateRoster(filteredPlayers);
+        $('.showOffense').removeClass('btn-default').addClass('active btn-success');
+        $('.showDefense').removeClass('active btn-success').addClass('btn-default');
+    })
+    $('.showDefense').on('click', function showDefense() {
+        var filteredPlayers = JSON.parse(localStorage.getItem('playerData')).filter(function(player) {
+            if (player.fullname === player.lastname) {
+                return true;
+            }
+        })
+        updateRoster(filteredPlayers);
+        $('.showDefense').removeClass('btn-default').addClass('active btn-success');
+        $('.showOffense').removeClass('active btn-success').addClass('btn-default');
+    })
 
     function updateRoster(playerList) {
         var roster = $('.player-roster');
