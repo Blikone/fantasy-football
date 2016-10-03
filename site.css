@@ -25,3 +25,101 @@
     height: 80%;
     overflow-y: scroll;
 }
+
+
+.ARI{
+    background: linear-gradient(#000000, #9b2743)
+}
+.ATL{
+    background: linear-gradient(#000000, #bd0d18)
+}
+.BAL{
+    background: linear-gradient(#280353, #d0b240)
+}
+.BUF{
+    background: linear-gradient(#00338d, #c60c30)
+}
+.CAR{
+    background: linear-gradient(#0088ce, #a5acaf)
+}
+.CHI{
+    background: linear-gradient(#03202f, #dd4814)
+}
+.CIN{
+    background: linear-gradient(#000000, #fb4f14)
+}
+.CLE{
+    background: linear-gradient(#26201e, #fe3c00)
+}
+.DAL{
+    background: linear-gradient(#0d254c, #c5ced6)
+}
+.DEN{
+    background: linear-gradient(#002244, #fb4f14)
+}
+.DET{
+    background: linear-gradient(#006db0, #c5c7cf)
+}
+.GB{
+    background: linear-gradient(#203731, #ffb612)
+}
+.HOU{
+    background: linear-gradient(#02253a, #b31b34)
+}
+.IND{
+    background: linear-gradient(#003b7b, #ffffff)
+}
+.JAC{
+    background: linear-gradient(#000000, #9f792c)
+}
+.KC{
+    background: linear-gradient(#b20032, #f2c800)
+}
+.LAR{
+    background: linear-gradient(#13264b, #c9af74)
+}
+.MIA{
+    background: linear-gradient(#008d97, #f5811f)
+}
+.MIN{
+    background: linear-gradient(#3b0160, #f0bf00)
+}
+.NE{
+    background: linear-gradient(#0d254c, #c80816)
+}
+.NO{
+    background: linear-gradient(#000000, #d2b887)
+}
+.NYG{
+    background: linear-gradient(#192f6b, #ca001a)
+}
+.NYJ{
+    background: linear-gradient(#0c371d, #ffffff)
+}
+.OAK{
+    background: linear-gradient(#000000, #c4c8cb)
+}
+.PHI{
+    background: linear-gradient(#003b48, #708090)
+}
+.PIT{
+    background: linear-gradient(#000000, #ffb612)
+}
+.SD{
+    background: linear-gradient(#0c2340, #ffb81c)
+}
+.SF{
+    background: linear-gradient(#af1e2c, #e6be8a)
+}
+.SEA{
+    background: linear-gradient(#002244, #69be28)
+}
+.TB{
+    background: linear-gradient(#d60a0b, #89765f)
+}
+.TEN{
+    background: linear-gradient(#0d254c, #648fcc)
+}
+.WAS{
+    background: linear-gradient(#773141, #ffb612)
+}

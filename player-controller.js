@@ -64,7 +64,7 @@ function PlayerController() {
         for (var i = 0; i < playerList.length; i++) {
             var player = playerList[i];
             template += `
-                <div class="player-card">
+                <div class="player-card ${player['pro_team']}">
                     <button type="button" class="btn btn-default add-to-team" id="${player.id}">Add to Team</button>
                     <br/>
                     <img src="${player.photo.replace('http','https')}" class="player-photo">
