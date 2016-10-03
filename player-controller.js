@@ -1,6 +1,18 @@
 function PlayerController() {
     var playerService = new PlayerService(); 
 
+    $('button.filter-players').on('submit', function filterPlayers(team, position) {
+        event.preventDefault();
+        var form = event.target;
+        var team = form.pickTeam.value;
+        var position = form.pickPosition.value;
+        var filteredPlayers = playerService.getPlayers().filter(function(player) {
+            if (player['pro_team'] == team && player.position == position){
+                return true;
+            };
+        });
+    });
+
     $('.new-player-form').on('submit', function addPlayer(event) {
         // debugger;
         event.preventDefault();
@@ -23,7 +35,7 @@ function PlayerController() {
                 <div class="player-card">
                     <button type="button" class="btn btn-default remove-player" id="${player.id}">Remove Player</button>
                     <br/>
-                    <img src="${player.photo}" class="player-photo">
+                    <img src="${player.photo.replace('http','https')}" class="player-photo">
                     <h3>${player.fullname}</h3>
                     <h4>${player.position}</h4>
                     <h1>${player.jersey}</h1>

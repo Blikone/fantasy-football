@@ -37,7 +37,7 @@ function PlayerService() {
     }
 
     this.getNFL = function loadPlayerData(callback) {
-        var apiUrl = "http://api.cbssports.com/fantasy/players/list?version=3.0&SPORT=football&response_format=json";
+        var apiUrl = "https://api.cbssports.com/fantasy/players/list?version=3.0&SPORT=football&response_format=json";
         //Lets check the localstorage for the data before making the call.
         //Ideally if a user has already used your site 
         //we can cut down on the load time by saving and pulling from localstorage 
@@ -46,14 +46,13 @@ function PlayerService() {
         if (localData) {
             var rawPlayerData = JSON.parse(localData);
             playerData = filterPlayers(rawPlayerData);
-            console.log(playerData[0]);
-            console.log(playerData[6]);
+            console.log(playerData[Math.ceil(Math.random()*100)]);
             return callback(playerData);
             //return will short-circuit the loadPlayerData function
             //this will prevent the code below from ever executing
         }
 
-        var url = "http://bcw-getter.herokuapp.com/?url=";
+        var url = "https://bcw-getter.herokuapp.com/?url=";
         var endPointUrl = url + encodeURIComponent(apiUrl);
         $.getJSON(endPointUrl, function (data) {
             var rawPlayerData = data.body.players;
@@ -63,8 +62,6 @@ function PlayerService() {
             localStorage.setItem('playerData', JSON.stringify(playerData))
             console.log('Finished Writing Player Data to localStorage')
             callback(playerData)
-            console.log(playerData[0]);
-            console.log(playerData[5])
         });
 
     }
