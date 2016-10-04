@@ -38,6 +38,10 @@ function PlayerService() {
         return vettedList;
     }
     var _mutableNFLData = this.loadNFL(vetPlayers)
+
+    this.getNFL = function() {
+        return _mutableNFLData;
+    }
     
     //////////////////////////////////////////
     ///////Hold and filter picking pool///////
@@ -59,12 +63,12 @@ function PlayerService() {
         });
         var filterBySquad = filteredPlayers.filter(function(player) {
             switch (squad) {
-                case offense:
+                case 'offense':
                     if (player.fullname !== player.lastname) {
                         return true;
                     };
                     break;
-                case defense:
+                case 'defense':
                     if (player.fullname !== player.lastname) {
                         return true;
                     };
@@ -129,6 +133,7 @@ function PlayerService() {
 
 
 
+}
 
 
 
@@ -242,5 +247,3 @@ function PlayerService() {
 //         };
 //     };
 
-
-// }
