@@ -43,7 +43,6 @@ function PlayerController() {
     var position = '*'
 
     $('.filter-bar').on('submit', function(team, position, squad) {
-        debugger;
         event.preventDefault();
         var form = event.target;
         team = form.pickTeam.value;
@@ -51,11 +50,14 @@ function PlayerController() {
         updateRoster(playerService.filterNFL(team, position, squad));
     });
     $('.showOffense').on('click', function (squad) {
+        debugger;
+        squad = 'offense';
         updateRoster(playerService.filterNFL(team, position, squad));
         $('.showOffense').removeClass('btn-default').addClass('active btn-success');
         $('.showDefense').removeClass('active btn-success').addClass('btn-default');
     })
     $('.showDefense').on('click', function (squad) {
+        squad = 'defense';
         updateRoster(playerService.filterNFL(team, position, squad));
         $('.showDefense').removeClass('btn-default').addClass('active btn-success');
         $('.showOffense').removeClass('active btn-success').addClass('btn-default');

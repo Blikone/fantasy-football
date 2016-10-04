@@ -66,7 +66,7 @@ function PlayerService() {
                     };
                     break;
                 case 'defense':
-                    if (player.fullname !== player.lastname) {
+                    if (player.fullname === player.lastname) {
                         return true;
                     };
                     break;
