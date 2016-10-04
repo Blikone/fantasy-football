@@ -39,9 +39,6 @@ function PlayerService() {
     }
     var _mutableNFLData = this.loadNFL(vetPlayers)
 
-    this.getNFL = function() {
-        return _mutableNFLData;
-    }
     
     //////////////////////////////////////////
     ///////Hold and filter picking pool///////
@@ -89,6 +86,10 @@ function PlayerService() {
         return _myPlayers;
     }
 
+    this.getNFL = function() {
+        return _mutableNFLData;
+    }
+    
     /////////////////////////////////////
     ///////Tap players for my team///////
     /////////////////////////////////////
