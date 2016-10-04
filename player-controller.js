@@ -2,11 +2,11 @@ function PlayerController() {
     ///////////////////////////////////////////
     ///////Initialize new Player Service///////
     ///////////////////////////////////////////
-    var playerService = new PlayerService(); 
+    var playerService = new PlayerService();
 
-    ////////////////////////////////////
-    ///////Update Roster function///////
-    ////////////////////////////////////
+    /////////////////////////////////////
+    ///////Update Roster functions///////
+    /////////////////////////////////////
     function updateRoster(playerList) {
         var roster = $('.player-roster');
         var template = '';
@@ -16,7 +16,7 @@ function PlayerController() {
                 <div class="player-card ${player['pro_team']}">
                     <button type="button" class="btn btn-default add-to-team" id="${player.id}">Add to Team</button>
                     <br/>
-                    <img src="${player.photo.replace('http','https')}" class="player-photo">
+                    <img src="${player.photo.replace('http', 'https')}" class="player-photo">
                     <h3>${player.fullname}</h3>
                     <h4>${player.position}</h4>
                     <h1>${player.jersey ? player.jersey : ''}</h1>
@@ -28,7 +28,23 @@ function PlayerController() {
     }
 
     function updateMyRoster(playerList) {
-        //largely the same as updateRoster, to be used on _myPlayers
+        var roster = $('.my-player-roster');
+        var template = '';
+        for (var i = 0; i < playerList.length; i++) {
+            var player = playerList[i];
+            template += `
+                <div class="my-player-card ${player['pro_team']}">
+                    <button type="button" class="btn btn-default remove-from-team" id="${player.id}">Boot From Team</button>
+                    <br/>
+                    <img src="${player.photo.replace('http', 'https')}" class="player-photo">
+                    <h3>${player.fullname}</h3>
+                    <h4>${player.position}</h4>
+                    <h1>${player.jersey ? player.jersey : ''}</h1>
+                </div>
+            `
+        }
+        roster.empty();
+        roster.append(template);
     };
 
     //////////////////////////////////////////
@@ -44,7 +60,7 @@ function PlayerController() {
     var position = '*'
     var squad = ''
 
-    $('.filter-bar').on('submit', function(team, position, squad) {
+    $('.filter-bar').on('submit', function (team, position, squad) {
         event.preventDefault();
         var form = event.target;
         team = form.pickTeam.value;
@@ -64,12 +80,19 @@ function PlayerController() {
         $('.showOffense').removeClass('active btn-success').addClass('btn-default');
     })
 
-    $('.player-card').on('click', 'button.add-to-team', function() {
-        playerService(this.id);
+    $('.player-roster').on('click', 'button.add-to-team', function () {
+        playerService.selectPlayer(this.id);
+        updateRoster(playerService.getNFL());
+        updateMyRoster(playerService.getMyPlayers());
+    });
 
-    })
-    
-    
+    $('.my-player-roster').on('click', 'button.remove-from-team', function () {
+        playerService.removePlayer(this.id);
+        updateRoster(playerService.getNFL());
+        updateMyRoster(playerService.getMyPlayers());
+    });
+
+
     ///////////////////////////////////////////
     ///////Receive input for new players///////
     ///////////////////////////////////////////
@@ -85,9 +108,9 @@ function PlayerController() {
         updateRoster(playerService.getNFL());
     });
 
-/////////////////////////
-///////Invoke Self///////
-/////////////////////////
+    /////////////////////////
+    ///////Invoke Self///////
+    /////////////////////////
 }
 PlayerController();
 
@@ -137,7 +160,7 @@ PlayerController();
     //     $('.showDefense').removeClass('btn-default').addClass('active btn-success');
     //     $('.showOffense').removeClass('active btn-success').addClass('btn-default');
     // })
-    
+
 
     // $('.new-player-form').on('submit', function addPlayer(event) {
     //     // debugger;

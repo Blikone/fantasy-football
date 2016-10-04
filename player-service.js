@@ -94,10 +94,12 @@ function PlayerService() {
     ///////Tap players for my team///////
     /////////////////////////////////////
     this.selectPlayer = function(id) {
+        console.log(this.getMyPlayers())
         var playerList = _mutableNFLData;
         for (let i = 0; i<playerList.length; i++) {
             if (playerList[i].id == id) {
-                _myPlayers.push(playerList.splice(i,1));
+                _myPlayers.push(playerList.splice(i,1)[0]);
+                console.log(this.getMyPlayers())
                 return;
             }
         }
@@ -106,11 +108,11 @@ function PlayerService() {
     ////////////////////////////////////////////////
     ///////Send unwanted players back to pool///////
     ////////////////////////////////////////////////
-    this.refusePlayer = function(id) {
+    this.removePlayer = function(id) {
         var playerList = _myPlayers;
         for (let i = 0; i<playerList.length; i++) {
             if (playerList[i].id == id) {
-                _mutableNFLData.push(playerList.splice(i,1));
+                _mutableNFLData.push(playerList.splice(i,1)[0]);
                 return;
             }
         }
