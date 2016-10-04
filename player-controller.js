@@ -27,10 +27,14 @@ function PlayerController() {
         roster.append(template);
     }
 
+    function updateMyRoster(playerList) {
+        //largely the same as updateRoster, to be used on _myPlayers
+    };
+
     //////////////////////////////////////////
-    ///////Load initial NFL master list///////***check this!!!
+    ///////Load initial NFL master list///////
     //////////////////////////////////////////
-    playerService.getNFL(updateRoster);
+    playerService.loadNFL(updateRoster);
 
     /////////////////////////////
     ///////Event Listeners///////
@@ -39,6 +43,7 @@ function PlayerController() {
     var position = '*'
 
     $('.filter-bar').on('submit', function(team, position, squad) {
+        debugger;
         event.preventDefault();
         var form = event.target;
         team = form.pickTeam.value;
@@ -56,6 +61,10 @@ function PlayerController() {
         $('.showOffense').removeClass('active btn-success').addClass('btn-default');
     })
 
+    $('.player-card').on('click', 'button.add-to-team', function() {
+        playerService(this.id);
+
+    })
     
     
     ///////////////////////////////////////////

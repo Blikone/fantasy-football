@@ -6,11 +6,11 @@ function PlayerService() {
     this.loadNFL = function loadNFL(callback) {
         var apiUrl = "https://api.cbssports.com/fantasy/players/list?version=3.0&SPORT=football&response_format=json";
         
-        var localData = localStorage.getItem('playerData');
+        var localData = localStorage.getItem('rawData');
         if (localData) {
             var rawData = JSON.parse(localData);
-            console.log(playerData[Math.ceil(Math.random()*100)]);
-            return callback(playerData);
+            console.log(rawData[Math.ceil(Math.random()*100)]);
+            return callback(rawData);
         }
         var url = "https://bcw-getter.herokuapp.com/?url=";
         var endPointUrl = url + encodeURIComponent(apiUrl);
@@ -18,9 +18,9 @@ function PlayerService() {
             var rawData = data.body.players;
             console.log('Player Data Ready')
             console.log('Writing Player Data to localStorage')
-            localStorage.setItem('playerData', JSON.stringify(playerData))
+            localStorage.setItem('rawData', JSON.stringify(rawData))
             console.log('Finished Writing Player Data to localStorage')
-            callback(playerData)
+            callback(rawData)
         });
     }
     /////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ function PlayerService() {
     ///////Hold and filter picking pool///////
     //////////////////////////////////////////
     this.filterNFL = function (team, position, squad) {
-        var filteredPlayers = _NFLData.filter(function(player) {
+        var filteredPlayers = _mutableNFLData.filter(function(player) {
             if (team == "*" && position == "*") {
                 return true;
             }
@@ -74,7 +74,6 @@ function PlayerService() {
                     return true;
             }
         });
-        _mutableNFLData = filterBySquad;
         return filterBySquad;
     };
 
