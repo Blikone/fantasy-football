@@ -9,7 +9,8 @@ function PlayerService() {
         var localData = localStorage.getItem('rawData');
         if (localData) {
             var rawData = JSON.parse(localData);
-            console.log(rawData[Math.ceil(Math.random()*100)]);
+            console.log(rawData[4]);
+            // console.log(rawData[Math.ceil(Math.random()*100)]);
             return callback(rawData);
         }
         var url = "https://bcw-getter.herokuapp.com/?url=";

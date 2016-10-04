@@ -34,13 +34,15 @@ function PlayerController() {
     //////////////////////////////////////////
     ///////Load initial NFL master list///////
     //////////////////////////////////////////
-    playerService.loadNFL(updateRoster);
+    updateRoster(playerService.getNFL());
+    // playerService.loadNFL(updateRoster);
 
     /////////////////////////////
     ///////Event Listeners///////
     /////////////////////////////
     var team = '*';
     var position = '*'
+    var squad = ''
 
     $('.filter-bar').on('submit', function(team, position, squad) {
         event.preventDefault();
@@ -50,7 +52,6 @@ function PlayerController() {
         updateRoster(playerService.filterNFL(team, position, squad));
     });
     $('.showOffense').on('click', function (squad) {
-        debugger;
         squad = 'offense';
         updateRoster(playerService.filterNFL(team, position, squad));
         $('.showOffense').removeClass('btn-default').addClass('active btn-success');
