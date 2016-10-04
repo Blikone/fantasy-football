@@ -34,7 +34,7 @@ function PlayerController() {
             var player = playerList[i];
             template += `
                 <div class="my-player-card ${player['pro_team']}">
-                    <button type="button" class="btn btn-default remove-from-team" id="${player.id}">Boot From Team</button>
+                    <button type="button" class="btn btn-default remove-from-team" id="${player.id}">You're Fired</button>
                     <br/>
                     <img src="${player.photo.replace('http', 'https')}" class="player-photo">
                     <h3>${player.fullname}</h3>
