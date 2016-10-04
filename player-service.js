@@ -27,7 +27,7 @@ function PlayerService() {
     ///////Alter to remove free agents: Create master list///////
     /////////////////////////////////////////////////////////////
     function vetPlayers(rawList) {
-        var vettedList =(rawList.filter(function(player) {
+        var vettedList = rawList.filter(function(player) {
             if (player.fullname == player.lastname) {
                 return true;
             };
@@ -37,7 +37,7 @@ function PlayerService() {
         });
         return vettedList;
     }
-    var _NFLData = this.loadNFL(vetPlayers)
+    var _mutableNFLData = this.loadNFL(vetPlayers)
     
     //////////////////////////////////////////
     ///////Hold and filter picking pool///////
@@ -69,26 +69,59 @@ function PlayerService() {
                         return true;
                     };
                     break;
+                default:
+                    return true;
             }
         });
+        _mutableNFLData = filterBySquad;
+        return filterBySquad;
     };
 
     //////////////////////////
     ///////Hold my team///////
     //////////////////////////
+    var _myPlayers = [];
+    this.getMyPlayers = function() {
+        return _myPlayers;
+    }
 
     /////////////////////////////////////
     ///////Tap players for my team///////
     /////////////////////////////////////
+    this.selectPlayer = function(id) {
+        var playerList = _mutableNFLData;
+        for (let i = 0; i<playerList.length; i++) {
+            if (playerList[i].id == id) {
+                _myPlayers.push(playerList.splice(i,1));
+                return;
+            }
+        }
+    }
 
     ////////////////////////////////////////////////
     ///////Send unwanted players back to pool///////
     ////////////////////////////////////////////////
+    this.refusePlayer = function(id) {
+        var playerList = _myPlayers;
+        for (let i = 0; i<playerList.length; i++) {
+            if (playerList[i].id == id) {
+                _mutableNFLData.push(playerList.splice(i,1));
+                return;
+            }
+        }
+    }
 
     ///////////////////////////////
     ///////Create new player///////
     ///////////////////////////////
-
+    function Player(playerName, playerPosition, playerJersey) {
+        this.fullname = playerName;
+        this.position = playerPosition;
+        this.jersey = playerJersey;
+        this.firstName = this.fullname.split(' ')[0];
+        this.id = this.fullname.split(' ').join('-');
+        this.photo = "http://s.nflcdn.com/static/content/public/image/fantasy/transparent/200x200/"
+    }
 
 
 
@@ -126,88 +159,88 @@ function PlayerService() {
     //     });
     // };
 
-    function vetPlayers(unfilteredList) {
-        var filteredList = unfilteredList.filter(function(player) {
-            if (player.fullname == player.lastname) {
-                return true;
-            };
-            if (player.jersey) {
-                return true;
-            };
-        });
-        return filteredList;
-    }
+//     function vetPlayers(unfilteredList) {
+//         var filteredList = unfilteredList.filter(function(player) {
+//             if (player.fullname == player.lastname) {
+//                 return true;
+//             };
+//             if (player.jersey) {
+//                 return true;
+//             };
+//         });
+//         return filteredList;
+//     }
 
-    this.loadNFL = function loadPlayerData(callback) {
-        var apiUrl = "https://api.cbssports.com/fantasy/players/list?version=3.0&SPORT=football&response_format=json";
-        //Lets check the localstorage for the data before making the call.
-        //Ideally if a user has already used your site 
-        //we can cut down on the load time by saving and pulling from localstorage 
-        var localData = localStorage.getItem('playerData');
-        if (localData) {
-            var rawPlayerData = JSON.parse(localData);
-            var playerData = vetPlayers(rawPlayerData);
-            console.log(playerData[Math.ceil(Math.random()*100)]);
-            return callback(playerData);
-            //return will short-circuit the loadPlayerData function
-            //this will prevent the code below from ever executing
-        }
-        var url = "https://bcw-getter.herokuapp.com/?url=";
-        var endPointUrl = url + encodeURIComponent(apiUrl);
-        $.getJSON(endPointUrl, function (data) {
-            var rawPlayerData = data.body.players;
-            var playerData = vetPlayers(rawPlayerData);
-            console.log('Player Data Ready')
-            console.log('Writing Player Data to localStorage')
-            localStorage.setItem('playerData', JSON.stringify(playerData))
-            console.log('Finished Writing Player Data to localStorage')
-            callback(playerData)
-        });
+//     this.loadNFL = function loadPlayerData(callback) {
+//         var apiUrl = "https://api.cbssports.com/fantasy/players/list?version=3.0&SPORT=football&response_format=json";
+//         //Lets check the localstorage for the data before making the call.
+//         //Ideally if a user has already used your site 
+//         //we can cut down on the load time by saving and pulling from localstorage 
+//         var localData = localStorage.getItem('playerData');
+//         if (localData) {
+//             var rawPlayerData = JSON.parse(localData);
+//             var playerData = vetPlayers(rawPlayerData);
+//             console.log(playerData[Math.ceil(Math.random()*100)]);
+//             return callback(playerData);
+//             //return will short-circuit the loadPlayerData function
+//             //this will prevent the code below from ever executing
+//         }
+//         var url = "https://bcw-getter.herokuapp.com/?url=";
+//         var endPointUrl = url + encodeURIComponent(apiUrl);
+//         $.getJSON(endPointUrl, function (data) {
+//             var rawPlayerData = data.body.players;
+//             var playerData = vetPlayers(rawPlayerData);
+//             console.log('Player Data Ready')
+//             console.log('Writing Player Data to localStorage')
+//             localStorage.setItem('playerData', JSON.stringify(playerData))
+//             console.log('Finished Writing Player Data to localStorage')
+//             callback(playerData)
+//         });
 
-    }
-
-
-    function Player(playerName, playerPosition, playerJersey) {
-        this.fullname = playerName;
-        this.position = playerPosition;
-        this.jersey = playerJersey;
-        this.firstName = this.fullname.split(' ')[0];
-        this.id = this.fullname.split(' ').join('-');
-        this.photo = "http://s.nflcdn.com/static/content/public/image/fantasy/transparent/200x200/"
-    }
-
-    var _NFLPlayers = [];
-    var _myPlayers = [];
-
-    this.getPlayers = function () {
-        return _myPlayers;
-    };
-
-    this.getNFL = function () {
-        return PlayerService.loadNFL(function(nfl) {
-            return nfl;
-        })
-    }
-
-    this.addPlayer = function (playerName, playerPosition, playerJersey) {
-        if (!playerName || !playerPosition || !playerJersey) {
-            return;
-        }
-        var player = new Player(playerName, playerPosition, playerJersey);
-        _myPlayers.push(player);
-    };
-
-    this.selectPlayer = function(player) {
-
-    }    
-
-    this.removePlayer = function (id) {
-        for (var i = 0; i < _players.length; i++) {
-            if (_myPlayers[i].id = id) {
-                _myPlayers.splice(i, 1);
-            };
-        };
-    };
+//     }
 
 
-}
+//     function Player(playerName, playerPosition, playerJersey) {
+//         this.fullname = playerName;
+//         this.position = playerPosition;
+//         this.jersey = playerJersey;
+//         this.firstName = this.fullname.split(' ')[0];
+//         this.id = this.fullname.split(' ').join('-');
+//         this.photo = "http://s.nflcdn.com/static/content/public/image/fantasy/transparent/200x200/"
+//     }
+
+//     var _NFLPlayers = [];
+//     var _myPlayers = [];
+
+//     this.getPlayers = function () {
+//         return _myPlayers;
+//     };
+
+//     this.getNFL = function () {
+//         return PlayerService.loadNFL(function(nfl) {
+//             return nfl;
+//         })
+//     }
+
+//     this.addPlayer = function (playerName, playerPosition, playerJersey) {
+//         if (!playerName || !playerPosition || !playerJersey) {
+//             return;
+//         }
+//         var player = new Player(playerName, playerPosition, playerJersey);
+//         _myPlayers.push(player);
+//     };
+
+//     this.selectPlayer = function(player) {
+
+//     }    
+
+//     this.removePlayer = function (id) {
+//         for (var i = 0; i < _players.length; i++) {
+//             if (_myPlayers[i].id = id) {
+//                 _myPlayers.splice(i, 1);
+//             };
+//         };
+//     };
+
+
+// }
