@@ -53,9 +53,23 @@ function PlayerController() {
     updateRoster(playerService.getNFL());
     // playerService.loadNFL(updateRoster);
 
-    /////////////////////////////
-    ///////Event Listeners///////
-    /////////////////////////////
+    ///////////////////////////////////////
+    ///////Communicating with memory///////
+    ///////////////////////////////////////
+    this.retrieveTeam = function() {
+        playerService.retrieveTeam();
+        updateRoster(playerService.getNFL());
+        updateMyRoster(playerService.getMyPlayers());
+    }
+    $('.save-team').on('click', function() {
+        playerService.saveTeam();
+    })
+    $('.load-team').on('click', this.retrieveTeam);
+
+
+    /////////////////////////////////
+    ///////Filtering Functions///////
+    /////////////////////////////////
     var team = '*';
     var position = '*'
     var squad = ''
@@ -79,6 +93,11 @@ function PlayerController() {
         $('.showDefense').removeClass('btn-default').addClass('active btn-success');
         $('.showOffense').removeClass('active btn-success').addClass('btn-default');
     })
+
+
+    /////////////////////////////////////////
+    ///////Adding and Removing Players///////
+    /////////////////////////////////////////
 
     $('.player-roster').on('click', 'button.add-to-team', function () {
         playerService.selectPlayer(this.id);
@@ -107,6 +126,7 @@ function PlayerController() {
         playerService.removePlayer(this.id);
         updateRoster(playerService.getNFL());
     });
+
 
     /////////////////////////
     ///////Invoke Self///////

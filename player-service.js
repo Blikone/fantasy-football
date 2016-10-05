@@ -1,5 +1,10 @@
 function PlayerService() {
 
+////To Do: enable storage and retrieval of team data in local memory
+////Bonus: Create a user constructor that would allow the creation of multiple users all pulling players from the same NFL pool 
+
+
+
     //////////////////////////////////
     ///////Get players from API///////
     //////////////////////////////////
@@ -9,8 +14,8 @@ function PlayerService() {
         var localData = localStorage.getItem('rawData');
         if (localData) {
             var rawData = JSON.parse(localData);
-            console.log(rawData[4]);
-            // console.log(rawData[Math.ceil(Math.random()*100)]);
+            // console.log(rawData[4]);
+            console.log(rawData[Math.ceil(Math.random()*100)]);
             return callback(rawData);
         }
         var url = "https://bcw-getter.herokuapp.com/?url=";
@@ -89,17 +94,46 @@ function PlayerService() {
     this.getNFL = function() {
         return _mutableNFLData;
     }
+
+    //////////////////////////////////////////////////////
+    ///////Store in and retrieve from Local Storage///////
+    //////////////////////////////////////////////////////
+
+    this.saveTeam = function() {
+        var myTeam = this.getMyPlayers();
+        localStorage.setItem('my-team', JSON.stringify(myTeam))
+    }
+
+    this.retrieveTeam = function() {
+        var team = localStorage.getItem('my-team');
+        var pool = this.getNFL();
+        if (team) {
+            team = JSON.parse(team);
+        } else {
+            team = [];
+        };
+        for (var i = 0; i < team.length; i ++) {
+            for (var j = 0; j < pool.length; j++) {
+                if (team[i] == pool[j]) {
+                    pool.splice(j,1);
+                };
+            };
+        };
+        _mutableNFLData = pool;//////I'm really not sure about this.  
+        _myPlayers = team;///////////Seems it's not properly encapsulated.
+        return team;
+    };
     
     /////////////////////////////////////
     ///////Tap players for my team///////
     /////////////////////////////////////
     this.selectPlayer = function(id) {
-        console.log(this.getMyPlayers())
+        // console.log(this.getMyPlayers())
         var playerList = _mutableNFLData;
         for (let i = 0; i<playerList.length; i++) {
             if (playerList[i].id == id) {
                 _myPlayers.push(playerList.splice(i,1)[0]);
-                console.log(this.getMyPlayers())
+                // console.log(this.getMyPlayers())
                 return;
             }
         }
