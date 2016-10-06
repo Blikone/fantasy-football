@@ -114,7 +114,7 @@ function PlayerService() {
         };
         for (var i = 0; i < team.length; i ++) {
             for (var j = 0; j < pool.length; j++) {
-                if (team[i] == pool[j]) {
+                if (team[i].id == pool[j].id) {
                     pool.splice(j,1);
                 };
             };
